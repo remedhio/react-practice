@@ -11,6 +11,20 @@ const getInitialRecipes = () => {
 function App() {
   const [recipes, setRecipes] = useState(getInitialRecipes);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+
+  const editingRecipe = recipes.find(recipe => recipe.id === editingId);
+
+  const updateRecipe = (id, updatedRecipe) => {
+    setRecipes(recipes.map(recipe => recipe.id === id ? updatedRecipe : recipe));
+    setEditingId(null);
+  }
+  const startEditing = (id) => {
+    setEditingId(id);
+  }
+  const cancelEditing = () => {
+    setEditingId(null);
+  }
 
   // 初回マウント時に初期化フラグを立てる
   useEffect(() => {
@@ -35,8 +49,13 @@ function App() {
   return (
     <>
       <h1>レシピ管理アプリ</h1>
-      <RecipeForm onAddRecipe={addRecipe} />
-      <RecipeList recipes={recipes} deleteRecipe={deleteRecipe} />
+      <RecipeForm
+        onAddRecipe={addRecipe}
+        onUpdateRecipe={updateRecipe}
+        editingRecipe={editingRecipe}
+        onCancelEditing={cancelEditing}
+      />
+      <RecipeList recipes={recipes} deleteRecipe={deleteRecipe} startEditing={startEditing} />
     </>
   )
 }

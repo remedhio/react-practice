@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export const RecipeForm = ({ onAddRecipe }) => {
-  const [name, setName] = useState('');
-  const [ingredients, setIngredients] = useState('');
+export const RecipeForm = ({ onAddRecipe, onUpdateRecipe, editingRecipe, onCancelEditing }) => {
+  const [name, setName] = useState(editingRecipe ? editingRecipe.value : '');
+  const [ingredients, setIngredients] = useState(editingRecipe ? editingRecipe.ingredients : '');
+
+  useEffect(() => {
+    if (editingRecipe) {
+      setName(editingRecipe.value);
+      setIngredients(editingRecipe.ingredients);
+    } else {
+      setName('');
+      setIngredients('');
+    }
+  }, [editingRecipe]);
 
   const addName = (e) => {
     setName(() => e.target.value);
@@ -15,7 +25,11 @@ export const RecipeForm = ({ onAddRecipe }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim() && ingredients.trim()) {
-      onAddRecipe({ id: Date.now(), value: name, ingredients: ingredients });
+      if (editingRecipe) {
+        onUpdateRecipe(editingRecipe.id, { id: editingRecipe.id, value: name, ingredients: ingredients });
+      } else {
+        onAddRecipe({ id: Date.now(), value: name, ingredients: ingredients });
+      }
       setName('');
       setIngredients('');
     }
@@ -35,7 +49,10 @@ export const RecipeForm = ({ onAddRecipe }) => {
         placeholder="材料"
         rows="3"
       />
-      <button type="submit">レシピを登録</button>
+      <button type="submit">{editingRecipe ? 'レシピを更新' : 'レシピを登録'}</button>
+      {editingRecipe && (
+        <button type="button" onClick={onCancelEditing}>キャンセル</button>
+      )}
     </form>
   )
 }
