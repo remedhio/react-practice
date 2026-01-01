@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+  background-color: #fff;
+}
+
+#root {
+  max-width: 600px;
+  margin: 0 auto;
+}

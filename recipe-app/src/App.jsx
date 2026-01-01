@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { RecipeForm } from './components/RecipeForm';
 import { RecipeList } from './components/RecipeList';
+import "./index.css";
+
 
 // localStorageから初期値を読み込む関数
 const getInitialRecipes = () => {
@@ -48,7 +50,7 @@ function App() {
 
   return (
     <>
-      <h1>レシピ管理アプリ</h1>
+      <h1 className="text-2xl my-4 py-4 font-bold text-center">レシピ管理アプリ</h1>
       <RecipeForm
         onAddRecipe={addRecipe}
         onUpdateRecipe={updateRecipe}
